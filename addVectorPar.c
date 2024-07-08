@@ -21,10 +21,10 @@ int main(int argc, char *argv[]){
    A=generateRandomArray(n);
    B=generateRandomArray(n);
    C=addArraySeq(A,B,n);
-   free(C);
    D=addArrayPar(A,B,n);
    free(A);
    free(B);
+   free(C);
    free(D);
 }
 
@@ -33,7 +33,8 @@ double *generateRandomArray(int numberOfElements){
    srand(time(NULL));
    myArray=malloc(numberOfElements*sizeof(double));
    for (int i=0;i<numberOfElements;i++){
-       myArray[i]=rand() % 100 + 1;
+       //myArray[i]=rand() % 100 + 1;
+         myArray[i]=i;
    }
    return myArray;
 }
@@ -43,9 +44,9 @@ double *addArraySeq(double *A, double *B, int numberOfElements){
    C=malloc(numberOfElements*sizeof(double));
    double wtime=0;
    wtime = omp_get_wtime ();
-
    for (int i=0;i<numberOfElements;i++){
         C[i]=A[i]+B[i];
+        //printf("C[%d]=A[%d]+B[%d]->%f = %f + %f\n", i,i,i,C[i],A[i],B[i]);
    }
   wtime = omp_get_wtime ()-wtime;
   printf("Tiempo de respuesta secuencial:%f\n",wtime);
@@ -57,10 +58,11 @@ double *addArrayPar(double *A, double *B, int numberOfElements){
    C=malloc(numberOfElements*sizeof(double));
    double wtime=0;
    wtime = omp_get_wtime();
-   //#pragma omp parallel for num_threads(3)
    #pragma omp parallel for
    for (int i=0;i<numberOfElements;i++){
+        	//printf("Hola soy el procesador %d\n",omp_get_thread_num());
         C[i]=A[i]+B[i];
+        //printf("C[%d]=A[%d]+B[%d]->%f = %f + %f\n", i,i,i,C[i],A[i],B[i]);
    }
   wtime = omp_get_wtime ()-wtime;
   printf("Tiempo de respuesta paralelo:%f\n",wtime);
